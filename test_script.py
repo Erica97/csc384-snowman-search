@@ -7,8 +7,8 @@ from test_problems import PROBLEMS
 test_manhattan = False
 test_fval_function = False
 test_alternate = False
-test_anytime_weighted_astar = True
-test_anytime_gbfs = False
+test_anytime_weighted_astar = False
+test_anytime_gbfs = True
 
 if test_manhattan:
     ##############################################################

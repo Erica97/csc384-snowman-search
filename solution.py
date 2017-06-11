@@ -61,25 +61,30 @@ def heur_alternate(state):
     total = 0
     
     for snowball in state.snowballs:
-      # checks if a snowball is in the one of the corners
-      if ((snowball[0] == 0 and snowball[1] == 0) or (snowball[0] == 0 and snowball[1] == state.height - 1)
-          or (snowball[0] == state.width - 1 and snowball[1] == 0) or (snowball[0] == state.width - 1 and snowball[1] == state.height - 1)):
-        return float('inf')
-      # checks if snowball is in the beside of a side of wall and the destination is on that wall
-      elif (((snowball[0] == 0 or snowball[0] == state.width - 1) and snowball[0] != state.destination[0])
-          or ((snowball[1] == 0 or snowball[1] == state.height - 1) and snowball[1] != state.destination[1])):
-        return float('inf')
-      else:
-        distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
+      if(snowball in state.destination):
+        return 0
+      else:      
+        # checks if a snowball is in the one of the corners
+        if ((snowball[0] == 0 and snowball[1] == 0) or (snowball[0] == 0 and snowball[1] == state.height - 1)
+            or (snowball[0] == state.width - 1 and snowball[1] == 0) or (snowball[0] == state.width - 1 and snowball[1] == state.height - 1)):
+          return float('inf')
         
-        if ((state.snowballs[snowball] == 3 and state.snowballs != state.destination)
-                  or (state.snowballs[snowball] == 4 and state.snowballs != state.destination)
-                  or state.snowballs[snowball] == 5):
-          distance = distance * 2
-        elif (state.snowballs[snowball] == 6 and state.snowballs != state.destination):
-          distance = distance * 3
-        
-        total = total + distance
+        else:
+          # checks if snowball is in the beside of a side of wall and the destination is on that wall
+          if(((snowball[0] == 0 or snowball[0] == state.width - 1) and snowball[0] != state.destination[0])
+             or ((snowball[1] == 0 or snowball[1] == state.height - 1) and snowball[1] != state.destination[1])):
+            return float('inf')
+          else:
+            distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
+            
+            #if ((state.snowballs[snowball] == 3 and state.snowballs != state.destination)
+                #or (state.snowballs[snowball] == 4 and state.snowballs != state.destination)
+                #or state.snowballs[snowball] == 5):
+              #distance = distance * 2
+            #elif (state.snowballs[snowball] == 6 and state.snowballs != state.destination):
+              #distance = distance * 3
+            
+            total = total + distance
     # manhattan distance for robot
     total += abs(state.robot[0] - state.destination[0]) + abs(state.robot[1] - state.destination[1])
     return total

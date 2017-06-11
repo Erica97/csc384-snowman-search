@@ -61,23 +61,6 @@ def heur_alternate(state):
     total = 0
     
     for snowball in state.snowballs:
-      
-      
-      # checks if there is an obstacle in two sides of a snowball
-      # up and left
-      if (((snowball[0] - 1, snowball[1]) in state.obstacles) or ((snowball[0], snowball[1] - 1) in state.obstacles)):
-        return float('inf')
-      # down and left
-      elif (((snowball[0] - 1, snowball[1]) in state.obstacles) or ((snowball[0], snowball[1] + 1) in state.obstacles)):
-        return float('inf')
-      # up and right
-      elif (((snowball[0] + 1, snowball[1]) in state.obstacles) or ((snowball[0], snowball[1] - 1) in state.obstacles)):
-        return float('inf')
-      # down and right
-      elif (((snowball[0] + 1, snowball[1]) in state.obstacles) or ((snowball[0], snowball[1] + 1) in state.obstacles)):
-        return float('inf')    
-      
-      
       # checks if a snowball is in the one of the corners
       if ((snowball[0] == 0 and snowball[1] == 0) or (snowball[0] == 0 and snowball[1] == state.height - 1)
           or (snowball[0] == state.width - 1 and snowball[1] == 0) or (snowball[0] == state.width - 1 and snowball[1] == state.height - 1)):
@@ -97,6 +80,8 @@ def heur_alternate(state):
           distance = distance * 3
         
         total = total + distance
+    # manhattan distance for robot
+    total += abs(state.robot[0] - state.destination[0]) + abs(state.robot[1] - state.destination[1])
     return total
   
 def blocked_by_wall(state, snowball):

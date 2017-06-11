@@ -60,35 +60,25 @@ def heur_alternate(state):
     #Your function should return a numeric value for the estimate of the distance to the goal.
     total = 0
     
-    snowballs_need_to_move = []
-    
     for snowball in state.snowballs:
-      if (snowball not in state.destination):
-        snowballs_need_to_move.append(snowball)
-        
-    if not snowballs_need_to_move:
-      return 0
-    
-    
-    for snowball in snowballs_need_to_move:
-      if(two_sides_blocked(state, snowball)):
-        return float("inf")
+      
+      if ((snowball[0] == 0 and snowball[1] == 0) or (snowball[0] == 0 and snowball[1] == state.height - 1)
+          or (snowball[0] == state.width - 1 and snowball[1] == 0) or (snowball[0] == state.width - 1 and snowball[1] == state.height - 1)):
+        return float('inf')
+      elif (((snowball[0] == 0 or snowball[0] == state.width - 1) and snowball[0] != state.destination[0])
+          or ((snowball[1] == 0 or snowball[1] == state.height - 1) and snowball[1] != state.destination[1])):
+        return float('inf')
       else:
-        if(blocked_by_wall(state, snowball)):
-          return float("inf")
-        else:
-          distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
+        distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
         
-          if ((state.snowballs[snowball] == 3 and state.snowballs != state.destination)
-                    or (state.snowballs[snowball] == 4 and state.snowballs != state.destination)
-                    or state.snowballs[snowball] == 5):
-            distance = distance * 2
+        if ((state.snowballs[snowball] == 3 and state.snowballs != state.destination)
+                  or (state.snowballs[snowball] == 4 and state.snowballs != state.destination)
+                  or state.snowballs[snowball] == 5):
+          distance = distance * 2
+        elif (state.snowballs[snowball] == 6 and state.snowballs != state.destination):
+          distance = distance * 3
         
-          if (state.snowballs[snowball] == 6 and state.snowballs != state.destination):
-            distance = distance * 3
-        
-          total = total + distance        
-        
+        total = total + distance
     return total
   
 def blocked_by_wall(state, snowball):
@@ -116,19 +106,19 @@ def two_sides_blocked(state, snowball):
       or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
     return True
   
-  ## checks if there is an obstacle in two sides of a snowball
-  ## up and left
-  #if (((x - 1, y) in state.obstacles) or ((x, y - 1) in state.obstacles)):
-    #return True
-  ## down and left
-  #if (((x - 1, y) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-    #return True
-  ## up and right
-  #if (((x + 1, y) in state.obstacles) or ((x, y - 1) in state.obstacles)):
-    #return True
-  ## down and right
-  #if (((x + 1, y) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-    #return True
+  # checks if there is an obstacle in two sides of a snowball
+  # up and left
+  if (((x - 1, y) in state.obstacles) or ((x, y - 1) in state.obstacles)):
+    return True
+  # down and left
+  if (((x - 1, y) in state.obstacles) or ((x, y + 1) in state.obstacles)):
+    return True
+  # up and right
+  if (((x + 1, y) in state.obstacles) or ((x, y - 1) in state.obstacles)):
+    return True
+  # down and right
+  if (((x + 1, y) in state.obstacles) or ((x, y + 1) in state.obstacles)):
+    return True
   
   return False
 

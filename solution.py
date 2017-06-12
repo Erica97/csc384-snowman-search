@@ -117,7 +117,7 @@ def dead_corner_checker(state, cord):
   dia_dir = (((cord[0] + 1),) + ((cord[1] + 1),))
 
   # surrounding box condition bools
-  left_has_box = (left_dir in state.)
+  left_has_box = (left_dir in state.snowballs)
   right_has_box = (right_dir in state.snowballs)
   up_has_box = (up_dir in state.snowballs)
   down_has_box = (down_dir in state.snowballs)

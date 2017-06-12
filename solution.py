@@ -61,6 +61,10 @@ def heur_alternate(state):
     total = 0
     
     for snowball in state.snowballs:
+      x = snowball[0]
+      y = snowball[1]      
+      
+      
       if(snowball in state.destination):
         return 0
       
@@ -73,12 +77,12 @@ def heur_alternate(state):
       else:
         
         # checks if snowball is in the beside of a side of wall and the destination is on that wall
-        if((snowball[0] == 0 or snowball[0] == state.width - 1) and snowball[0] != state.destination[0]):
+        if((x == 0 or x == state.width - 1) and x != state.destination[0]):
           return float('inf')
-        elif((snowball[1] == 0 or snowball[1] == state.height - 1) and snowball[1] != state.destination[1]):
+        elif((y == 0 or y == state.height - 1) and y != state.destination[1]):
           return float('inf')
         
-        distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
+        distance = abs(x - state.destination[0]) + abs(y - state.destination[1])
         
         size = state.snowballs[snowball]
         if (size == 3 or size == 4 or size == 5):

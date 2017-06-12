@@ -65,15 +65,6 @@ def heur_alternate(state):
         return 0
       
       else:
-        
-        if((x - 1, y) in state.obstacles):
-          if (((x, y - 1) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-            return float('inf')
-          
-        elif((x + 1, y) in state.obstacles):
-          if (((x, y - 1) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-            return float('inf')
-        
         # checks if a snowball is in the one of the corners
         if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
            or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):

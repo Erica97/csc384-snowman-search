@@ -59,38 +59,45 @@ def heur_alternate(state):
     #Write a heuristic function that improves upon heur_manhattan_distance to estimate distance between the current state and the goal.
     #Your function should return a numeric value for the estimate of the distance to the goal.
     total = 0
+    snowballs_not_in_destination = []
     
-    for snowball in state.snowballs:
+    for sn in state.snowballs:
+      if(sn not in state.destination):
+        snowballs_not_in_destination.append(sn)
+    if not snowballs_not_in_destination:
+      return 0
+    
+    for snowball in snowballs_not_in_destination:
       x = snowball[0]
       y = snowball[1]      
       
       
-      if(snowball in state.destination):
-        return 0
+      #if(snowball in state.destination):
+        #return 0
       
-      else:
+      #else:
         
-        # checks if a snowball is in the one of the corners
-        if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
-           or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
-          if (state.destination != (x, y)):
-            return float('inf')        
-        
-        # checks if snowball is in the beside of a side of wall and the destination is on that wall
-        if((x == 0 or x == state.width - 1) and x != state.destination[0]):
-          return float('inf')
-        elif((y == 0 or y == state.height - 1) and y != state.destination[1]):
-          return float('inf')
-        
-        distance = abs(x - state.destination[0]) + abs(y - state.destination[1])
-        
-        size = state.snowballs[snowball]
-        if (size == 3 or size == 4 or size == 5):
-          distance = distance * 2
-        elif (size == 6):
-          distance = distance * 3
-        
-        total = total + distance
+      # checks if a snowball is in the one of the corners
+      if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
+         or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
+        if (state.destination != (x, y)):
+          return float('inf')        
+      
+      # checks if snowball is in the beside of a side of wall and the destination is on that wall
+      if((x == 0 or x == state.width - 1) and x != state.destination[0]):
+        return float('inf')
+      elif((y == 0 or y == state.height - 1) and y != state.destination[1]):
+        return float('inf')
+      
+      distance = abs(x - state.destination[0]) + abs(y - state.destination[1])
+      
+      size = state.snowballs[snowball]
+      if (size == 3 or size == 4 or size == 5):
+        distance = distance * 2
+      elif (size == 6):
+        distance = distance * 3
+      
+      total = total + distance
     # manhattan distance for robot
     total += abs(state.robot[0] - state.destination[0]) + abs(state.robot[1] - state.destination[1])
     return total  

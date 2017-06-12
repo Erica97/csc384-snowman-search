@@ -78,7 +78,15 @@ def heur_alternate(state):
         elif((y == 0 or y == state.height - 1) and y != state.destination[1]):
           return float('inf')
         
-        total += heur_manhattan_distance(state)
+        distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
+        
+        size = state.snowballs[snowball]
+        if (size == 3 or size == 4 or size == 5):
+          distance = distance * 2
+        elif (size == 6):
+          distance = distance * 3 
+            
+        total = total + distance
     # manhattan distance for robot
     total += abs(state.robot[0] - state.destination[0]) + abs(state.robot[1] - state.destination[1])
     return total  

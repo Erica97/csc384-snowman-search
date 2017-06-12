@@ -112,18 +112,19 @@ def two_sides_blocked(state, snowball):
       #return True
   
   # checks if there is an obstacle in two sides of a snowball
-  # up and left
-  if (((x - 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):  
-    return True
-  # down and left
-  if (((x - 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
-    return True
-  # up and right
-  if (((x + 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):
-    return True
-  # down and right
-  if (((x + 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
-    return True
+  if(state.destination != (x, y)):
+    # up and left
+    if (((x - 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):
+      return True
+    # down and left
+    if (((x - 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
+      return True
+    # up and right
+    if (((x + 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):
+      return True
+    # down and right
+    if (((x + 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
+      return True
   
   return False
 

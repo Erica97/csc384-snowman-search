@@ -85,9 +85,9 @@ def heur_alternate(state):
         distance = abs(x - state.destination[0]) + abs(y - state.destination[1])
         
         size = state.snowballs[snowball]
-        if (size == 3 or size == 4 or size == 5):
+        if ((size == 3 or size == 4 or size == 5) and (snowball not in state.destination)):
           distance = distance * 2
-        elif (size == 6):
+        elif (size == 6 and (snowball not in state.destination)):
           distance = distance * 3
         
         total = total + distance

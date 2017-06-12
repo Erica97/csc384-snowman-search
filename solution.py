@@ -70,11 +70,14 @@ def heur_alternate(state):
       
       else:
         
-        ## checks if a snowball is in the one of the corners
-        #if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
-           #or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
-          #if (state.destination != (x, y)):
-            #return float('inf')        
+        if(two_sides_blocked(state, snowball)):
+          return float('inf')
+        
+        # checks if a snowball is in the one of the corners
+        if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
+           or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
+          if (state.destination != (x, y)):
+            return float('inf')        
         
         # checks if snowball is in the beside of a side of wall and the destination is on that wall
         if((x == 0 or x == state.width - 1) and x != state.destination[0]):
@@ -103,28 +106,24 @@ def two_sides_blocked(state, snowball):
   y = snowball[1]
   
   # checks if a snowball is in the one of the corners
-  if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
-      or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
-    if(state.destination != (x, y)):    
-      return True
+  #if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
+      #or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
+    #if(state.destination != (x, y)):    
+      #return True
   
   # checks if there is an obstacle in two sides of a snowball
   # up and left
-  if (((x - 1, y) in state.obstacles) or ((x, y - 1) in state.obstacles)):
-    if((state.destination != (x-1, y)) or (state.destination != (x, y-1))):    
-      return True
+  if (((x - 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):  
+    return True
   # down and left
-  if (((x - 1, y) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-    if((state.destination != (x-1, y)) or (state.destination != (x, y+1))): 
-      return True
+  if (((x - 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
+    return True
   # up and right
-  if (((x + 1, y) in state.obstacles) or ((x, y - 1) in state.obstacles)):
-    if((state.destination != (x+1, y)) or (state.destination != (x, y-1))): 
-      return True
+  if (((x + 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):
+    return True
   # down and right
-  if (((x + 1, y) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-    if((state.destination != (x+1, y)) or (state.destination != (x, y+1))): 
-      return True
+  if (((x + 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
+    return True
   
   return False
 

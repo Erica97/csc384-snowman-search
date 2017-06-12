@@ -63,6 +63,13 @@ def heur_alternate(state):
     for snowball in state.snowballs:
       if(snowball in state.destination):
         return 0
+      
+      # checks if a snowball is in the one of the corners
+      elif ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
+          or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
+        return True      
+      
+      
       else:
         
         # checks if snowball is in the beside of a side of wall and the destination is on that wall

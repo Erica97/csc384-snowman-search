@@ -1,9 +1,9 @@
-1.
+1. First of all, when you write your alternate heuristic function try to write your code as much efficient as you can. Do not use extra for loops, if statements and etc. Otherwise you will lose the speed even you gain accuracy.
 
-2.
+2. Try to find out the deadlocks before doing any coding. It will help to prune a lot of states at the beginning. Check if the snowball is in the one of the four corners, or snowball is next to a wall and the destination is not along the same wall.
 
-3.
+3. Consider all snowballs, robot and obstacles in your manhattan distance calculations in the alternate heuristic function. Every object on the grid matters. Since the basic manhattan distance assumes there is no obstacles, considering obstacles in the calculation makes a difference.
 
-4.
+4. When you check the deadlocks consider the obstacles as well. If the two sides of a snowball, up and left, up and right, or down and left, down and right are the obstacles it means it is a deadlock. Check also the cases that snowball is next to a wall and the other side is an obstacle, this is a deadlock as well. But be careful when implements this, since there might be too many obstacles, your function will iterate through all of them each time and it will cost you to lose time. If you can find data structure that help you to improve this, it will definitely make your heuristic function more useful.
 
-5.
+5. Try to use variables as much as you can. Because it is better to calculate something once, store it and use it instead of each time calculate it. Also, try to remember previous situations, it will help you to save your time. Since there are multiple snowballs and each time only one of them moves, others remain the same. So no need to calculate stable snowballs each time.

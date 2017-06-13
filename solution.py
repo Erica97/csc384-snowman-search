@@ -30,14 +30,16 @@ def heur_manhattan_distance(state):
     #We want an admissible heuristic, which is an optimistic heuristic. 
     #It must always underestimate the cost to get from the current state to the goal.
     #The sum of the Manhattan distances between the snowballs and the destination for the Snowman is such a heuristic.  
-    #When calculating distances, assume there are no obsdtacles on the grid.
+    #When calculating distances, assume there are no obstacles on the grid.
     #You should implement this heuristic function exactly, even if it is tempting to improve it.
     #Your function should return a numeric value; this is the estimate of the distance to the goal.
     
     total = 0
     for snowball in state.snowballs:
+      # calculate manhattan distance between snowball and destination
       distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
-        
+      
+      # recalculate distance in the case of stacks of snowballs
       size = state.snowballs[snowball]
       if (size == 3 or size == 4 or size == 5):
         distance = distance * 2
@@ -55,82 +57,45 @@ def heur_alternate(state):
     #heur_manhattan_distance has flaws.   
     #Write a heuristic function that improves upon heur_manhattan_distance to estimate distance between the current state and the goal.
     #Your function should return a numeric value for the estimate of the distance to the goal.
-    total = 0
     
+    total = 0
     for snowball in state.snowballs:
       x = snowball[0]
       y = snowball[1]
       
+      # return 0 for the snowballs that are already in destination
       if(snowball in state.destination):
         return 0
       
       else:
-        # checks if a snowball is in the one of the corners
+        # checks if a snowball is in the one of the corners and destination not in the corner
         if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
            or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
           if (state.destination != (x, y)):
-            return float('inf')        
+            return float('inf')       
         
-        # checks if snowball is in the beside of a side of wall and the destination is on that wall
+        # checks if snowball is in the beside of a wall and the destination is on that wall
         if((x == 0 or x == state.width - 1) and x != state.destination[0]):
           return float('inf')
         elif((y == 0 or y == state.height - 1) and y != state.destination[1]):
           return float('inf')
         
-        distance = abs(snowball[0] - state.destination[0]) + abs(snowball[1] - state.destination[1])
+        # calculate manhattan distance
+        distance = abs(x - state.destination[0]) + abs(y - state.destination[1])
         
+        # recalculate distance in the case of stacks of snowballs
         size = state.snowballs[snowball]
         if (size == 3 or size == 4 or size == 5):
           distance = distance * 2
         elif (size == 6):
-          distance = distance * 3 
-            
+          distance = distance * 3
+          
         total = total + distance
+    # takes into account obstacles
+    total -= len(state.obstacles)
     # manhattan distance for robot
     total += abs(state.robot[0] - state.destination[0]) + abs(state.robot[1] - state.destination[1])
-    return total  
-  
-def two_sides_blocked(state, snowball):
-  '''INPUT: a snowball state, coordinates of a snowball'''
-  '''OUTPUT: a boolean value that checks if two consecutive sides of snowball is locked.'''
-  
-  x = snowball[0]
-  y = snowball[1]
-  
-  # checks if a snowball is in the one of the corners
-  #if ((x == 0 and y == 0) or (x == 0 and y == state.height - 1)
-      #or (x == state.width - 1 and y == 0) or (x == state.width - 1 and y == state.height - 1)):
-    #if(state.destination != (x, y)):    
-      #return True
-  
-  # checks if there is an obstacle in two sides of a snowball
-  # up and left
-    
-  if((x - 1, y) in state.obstacles):
-    if (((x, y - 1) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-      return True
-    
-  elif((x + 1, y) in state.obstacles):
-    if (((x, y - 1) in state.obstacles) or ((x, y + 1) in state.obstacles)):
-      return True
-  
-  else:
-    return False
-    
-    
-  #if (((x - 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):
-    #return True
-  ## down and left
-  #if (((x - 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
-    #return True
-  ## up and right
-  #if (((x + 1, y) in state.obstacles) and ((x, y - 1) in state.obstacles)):
-    #return True
-  ## down and right
-  #if (((x + 1, y) in state.obstacles) and ((x, y + 1) in state.obstacles)):
-    #return True
-  
-  #return False
+    return total
 
 def fval_function(sN, weight):
 #IMPLEMENT
@@ -156,24 +121,30 @@ def anytime_gbfs(initial_state, heur_fn, timebound = 10):
     '''Provides an implementation of anytime greedy best-first search, as described in the HW1 handout'''
     '''INPUT: a snowball state that represents the start state and a timebound (number of seconds)'''
     '''OUTPUT: A goal state (if a goal is found), else False''' 
+    
     result = False
     
+    # records time
     starttime = os.times()[0]
     endtime = starttime + timebound
     
+    # search engine is initialized
     se = SearchEngine('best_first', 'full')
     se.init_search(initial_state, snowman_goal_state, heur_fn)
     
     cost_bound = (float("inf"), float("inf"), float("inf"))
     search_result = se.search(timebound)
     
+    # searches until the timebound exceeded
     while starttime < endtime:
       if search_result == False:
         return result
       
+      # records remaining time
       timebound = timebound - (os.times()[0] - starttime)
       starttime = os.times()[0]
       
+      # prune based on g_vlaue of node
       if search_result.gval <= cost_bound[0]:
         cost_bound = (search_result.gval, search_result.gval, search_result.gval)
         result = search_result
@@ -187,11 +158,14 @@ def anytime_weighted_astar(initial_state, heur_fn, weight=1., timebound = 10):
     '''Provides an implementation of anytime weighted a-star, as described in the HW1 handout'''
     '''INPUT: a snowball state that represents the start state and a timebound (number of seconds)'''
     '''OUTPUT: A goal state (if a goal is found), else False''' 
+    
     result = False
     
+    # records time
     starttime = os.times()[0]
     endtime = starttime + timebound
     
+    # search engine is initialized with a custom search strategy
     wrapped_fval_function = (lambda sN: fval_function(sN, weight))
     se = SearchEngine('custom', 'full')
     se.init_search(initial_state, snowman_goal_state, heur_fn, wrapped_fval_function)
@@ -199,20 +173,23 @@ def anytime_weighted_astar(initial_state, heur_fn, weight=1., timebound = 10):
     cost_bound = (float("inf"), float("inf"), float("inf"))
     search_result = se.search(timebound)
     
+    # searches until the timebound exceeded
     while starttime < endtime:
       if search_result == False:
         return result
       
+      # records remaining time
       timebound = timebound - (os.times()[0] - starttime)
       starttime = os.times()[0]
       
+      # prune based on g_vlaue of node
       if search_result.gval <= cost_bound[0]:
         cost_bound = (search_result.gval, search_result.gval, search_result.gval)
         result = search_result
         
       search_result = se.search(timebound, cost_bound)
     
-    return result    
+    return result
 
 if __name__ == "__main__":
   #TEST CODE
@@ -228,7 +205,7 @@ if __name__ == "__main__":
     s0 = PROBLEMS[i] #Problems will get harder as i gets bigger
 
     se = SearchEngine('astar', 'full')
-    se.init_search(s0, goal_fn=snowman_goal_state, heur_fn=heur_manhattan_distance)
+    se.init_search(s0, goal_fn=snowman_goal_state, heur_fn=heur_simple)
     final = se.search(timebound)
 
     if final:
@@ -255,7 +232,7 @@ if __name__ == "__main__":
 
     s0 = PROBLEMS[i] #Problems get harder as i gets bigger
     weight = 10 
-    final = anytime_weighted_astar(s0, heur_fn=heur_manhattan_distance, weight=weight, timebound=timebound)
+    final = anytime_weighted_astar(s0, heur_fn=heur_simple, weight=weight, timebound=timebound)
 
     if final:
       final.print_path()   
